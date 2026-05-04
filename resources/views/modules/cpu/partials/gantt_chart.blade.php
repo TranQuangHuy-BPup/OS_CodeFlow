@@ -1,13 +1,14 @@
-<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-6 shadow-sm">
-    <h3 class="font-h3 text-h3 text-on-surface mb-4">Gantt Chart</h3>
-    <div class="border border-outline-variant bg-surface rounded-lg p-8 flex items-center justify-center min-h-[120px] overflow-x-auto relative dot-pattern">
-        <style>
-            .dot-pattern {
-                background-image: radial-gradient(#c3c6d7 1px, transparent 1px);
-                background-size: 16px 16px;
-            }
-        </style>
-        {{-- Chỗ này để Quang Huy nhúng logic vẽ biểu đồ động --}}
-        <p class="text-on-surface-variant font-body-base text-body-base italic">Simulation pending. Await execution parameters.</p>
+<div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden mb-8">
+    <div class="px-6 py-4 border-b border-slate-200 bg-slate-50">
+        <h3>Gantt Chart</h3>
+    </div>
+    <div class="p-6">
+        <div class="border-2 border-dashed border-slate-200 bg-slate-50/50 rounded-xl p-8 flex items-center justify-center min-h-[140px] relative">
+            <style>
+                .dot-pattern { background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 16px 16px; }
+            </style>
+            <div class="absolute inset-0 dot-pattern opacity-50 rounded-xl"></div>
+            <p class="text-slate-400 font-medium italic z-10">Simulation pending. Await execution parameters.</p>
+        </div>
     </div>
 </div>
