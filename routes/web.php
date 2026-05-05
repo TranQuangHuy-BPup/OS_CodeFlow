@@ -16,6 +16,7 @@ Route::get('/cpu', [CPUController::class, 'show'])->defaults('algorithm', 'fcfs'
 
 // Nếu muốn nhảy thẳng vào từng thuật toán cụ thể
 Route::get('/cpu/{algorithm}', [CPUController::class, 'show'])->name('cpu.algorithm');
+Route::post('/cpu/{algorithm}', [CPUController::class, 'simulate'])->name('cpu.simulate');
 
 Route::get('/deadlock', [DeadlockController::class, 'index'])->name('deadlock');
 
