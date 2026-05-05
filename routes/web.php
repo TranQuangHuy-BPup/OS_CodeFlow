@@ -4,24 +4,40 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CPUController;
 use App\Http\Controllers\DeadlockController;
 use App\Http\Controllers\PageReplacementController;
+// ==========================================
+// TRANG CHỦ (Mặc định load vào CPU)
+// ==========================================
+Route::get('/', [CPUController::class, 'index']);
+
+// ==========================================
+// PHÂN HỆ 1: ĐỊNH THỜI CPU (CPU SCHEDULING)
+// ==========================================
+// Hiển thị giao diện
+Route::get('/cpu', [CPUController::class, 'index'])->name('cpu');
+// Gửi form tính toán
+Route::post('/cpu/simulate', [CPUController::class, 'simulate'])->name('cpu.simulate');
 
 
-#Route::get('/', function () {
-#   return view('layouts.app');
-#});
-
-Route::get('/', [CPUController::class, 'show'])->defaults('algorithm', 'fcfs');
-
-Route::get('/cpu', [CPUController::class, 'show'])->defaults('algorithm', 'fcfs')->name('cpu');
-
-// Nếu muốn nhảy thẳng vào từng thuật toán cụ thể
-Route::get('/cpu/{algorithm}', [CPUController::class, 'show'])->name('cpu.algorithm');
-
+// ==========================================
+// PHÂN HỆ 2: DEADLOCK
+// ==========================================
+// Hiển thị giao diện
 Route::get('/deadlock', [DeadlockController::class, 'index'])->name('deadlock');
+// Gửi form tính toán
+Route::post('/deadlock/simulate', [DeadlockController::class, 'simulate'])->name('deadlock.simulate');
 
-Route::get('/page-replacement', [PageReplacementController::class, 'index'])->name('page_replacement');
 
-// http://127.0.0.1:8000/ui-kit
+// ==========================================
+// PHÂN HỆ 3: THAY THẾ TRANG (PAGE REPLACEMENT)
+// ==========================================
+// Hiển thị giao diện
+Route::get('/page-replacement', [PageReplacementController::class, 'index'])->name('page-replacement');
+// Gửi form tính toán
+Route::post('/page-replacement/simulate', [PageReplacementController::class, 'simulate'])->name('page-replacement.simulate');
+
+// ==========================================
+// UI KIT (DÀNH CHO THIẾT KẾ GIAO DIỆN MẪU)
+// ==========================================
 Route::get('/ui-kit', function () {
     return view('layouts.ui_kit'); 
 });

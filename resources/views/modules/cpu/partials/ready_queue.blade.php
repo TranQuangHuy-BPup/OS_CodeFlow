@@ -1,4 +1,4 @@
-<div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden mb-8">
+<!-- <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden mb-8">
     <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
         <h3>Process Queue</h3>
         <button class="text-primary font-bold text-sm flex items-center gap-1 hover:text-blue-700 transition-colors">
@@ -31,4 +31,4 @@
             </tbody>
         </table>
     </div>
-</div>
+</div> -->

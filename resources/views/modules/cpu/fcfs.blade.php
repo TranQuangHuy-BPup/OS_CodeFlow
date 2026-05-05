@@ -1,7 +1,7 @@
 <div class="bg-white p-6 rounded-xl shadow-sm border border-outline-variant" x-transition>
     <h3 class="font-h3 text-on-primary-container mb-4 flex items-center gap-2">
         <span class="material-symbols-outlined">analytics</span>
-        Result: {{ strtoupper(str_replace('_', ' ', $algorithm)) }}
+        Result: {{ strtoupper(str_replace('_', ' ', $algo)) }}
     </h3>
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse border border-outline-variant rounded-lg">

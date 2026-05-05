@@ -1,26 +1,19 @@
-<div class="bg-white border border-outline-variant rounded-xl p-6 shadow-sm relative z-10">
-    <h2 class="font-h2 text-h2 text-primary mb-2 flex items-center gap-2">
-        <span class="material-symbols-outlined">account_tree</span> System State Setup
-    </h2>
-    <p class="text-on-surface-variant font-body-sm text-body-sm mb-6">Configure the Banker's Algorithm parameters (Processes and Resource Types).</p>
-    
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
-        <div>
-            <label class="block font-label-caps text-label-caps text-on-surface-variant mb-2">Processes (n)</label>
-            <input class="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2.5 text-on-surface focus:ring-2 focus:ring-primary/20 outline-none transition-all" type="number" value="3" min="1" max="10"/>
+<div class="bg-white rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.06)] mb-8">
+    {{-- FORM GỬI DATA LÊN CONTROLLER --}}
+    <form action="{{ route('deadlock.simulate') }}" method="POST">
+        @csrf
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-6 items-end">
+            
+            {{-- Dropdown Chọn Thuật Toán --}}
+            <div class="md:col-span-2">
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Algorithm</label>
+                {{-- Dùng x-model="algoTab" để nó tự động link với biến ẩn/hiện ở file main --}}
+                <select x-model="algoTab" name="algorithm" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 font-medium shadow-inner focus:ring-2 focus:ring-primary/20 outline-none transition-all cursor-pointer">
+                    <option value="bankers">Banker's Algorithm</option>
+                    <option value="detection">Deadlock Detection</option>
+                    <option value="recovery">Deadlock Recovery</option>
+                </select>
+            </div>      
         </div>
-        <div>
-            <label class="block font-label-caps text-label-caps text-on-surface-variant mb-2">Resource Types (m)</label>
-            <input class="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2.5 text-on-surface focus:ring-2 focus:ring-primary/20 outline-none transition-all" type="number" value="3" min="1" max="10"/>
-        </div>
-        
-        <div class="col-span-1 md:col-span-2 flex gap-3 justify-end">
-            <button class="bg-primary text-white px-6 py-2.5 rounded-lg font-bold hover:opacity-90 active:scale-95 transition-all flex items-center gap-2">
-                <span class="material-symbols-outlined text-sm">settings_suggest</span> Generate Matrix
-            </button>
-            <button class="bg-surface border border-outline-variant text-on-surface px-4 py-2.5 rounded-lg font-medium hover:bg-surface-variant transition-all flex items-center gap-2">
-                <span class="material-symbols-outlined text-sm">refresh</span> Reset
-            </button>
-        </div>
-    </div>
+    </form>
 </div>

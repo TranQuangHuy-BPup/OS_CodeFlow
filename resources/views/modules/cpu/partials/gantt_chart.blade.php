@@ -1,4 +1,4 @@
-<div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden mb-8">
+<!-- <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden mb-8">
     <div class="px-6 py-4 border-b border-slate-200 bg-slate-50">
         <h3>Gantt Chart</h3>
     </div>
@@ -11,4 +11,4 @@
             <p class="text-slate-400 font-medium italic z-10">Simulation pending. Await execution parameters.</p>
         </div>
     </div>
-</div>
+</div> -->

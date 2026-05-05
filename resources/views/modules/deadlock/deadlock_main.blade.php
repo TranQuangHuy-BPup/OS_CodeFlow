@@ -1,18 +1,30 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="space-y-6">
-        {{-- 1. Cấu hình số Tiến trình & Tài nguyên --}}
+    {{-- Khai báo biến algoTab ở cấp cao nhất để quản lý các tab. Mặc định là thuật toán được chọn hoặc bankers --}}
+    <div class="space-y-8 pb-12" x-data="{ algoTab: '{{ $algo ?? 'bankers' }}' }">
+        
+        {{-- Khối 1: Cấu hình hệ thống (Dropdown chọn thuật toán) --}}
         @include('modules.deadlock.partials.parameters')
 
-        {{-- 2. Khu vực hiển thị các Ma trận (Allocation, Max, Need) --}}
-        <div id="matrices-container">
-            @include('modules.deadlock.partials.matrices')
-        </div>
+        {{-- Khối 2: Phân luồng hiển thị MƯỢT MÀ bằng x-show --}}
+        <div id="algorithm-content">
+            
+            {{-- Giao diện Banker (Chỉ hiện khi algoTab == 'bankers') --}}
+            <div x-show="algoTab === 'bankers'" x-transition>
+                @include('modules.deadlock.bankers')
+            </div>
 
-        {{-- 3. Kết quả chuỗi an toàn & Log hệ thống --}}
-        <div id="deadlock-results">
-            @include('modules.deadlock.partials.results')
+            {{-- Giao diện Detection (Chỉ hiện khi algoTab == 'detection') --}}
+            <div x-show="algoTab === 'detection'" x-transition style="display: none;">
+                @include('modules.deadlock.detection')
+            </div>
+
+            {{-- Giao diện Recovery (Chỉ hiện khi algoTab == 'recovery') --}}
+            <div x-show="algoTab === 'recovery'" x-transition style="display: none;">
+                @include('modules.deadlock.recovery')
+            </div>
+
         </div>
     </div>
 @endsection

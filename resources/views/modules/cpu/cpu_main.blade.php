@@ -11,10 +11,11 @@
         {{-- Khối 3: Minh họa Gantt Chart (UX: Trực quan hóa tiến trình) --}}
         @include('modules.cpu.partials.gantt_chart')
 
-        {{-- Khối 4: Bảng kết quả 8 cột thống nhất (UX: Đối chiếu thông số) --}}
+        {{-- Khối 4: Bảng kết quả 8 cột thống nhất --}}
         <div id="algorithm-results" x-transition>
-            @if(isset($algorithm))
-                @include('modules.cpu.' . $algorithm)
+            {{-- ĐỔI THÀNH $algo Ở 2 DÒNG DƯỚI ĐÂY --}}
+            @if(isset($algo))
+                @include('modules.cpu.' . $algo)
             @endif
         </div>
     </div>
