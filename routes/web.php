@@ -18,11 +18,16 @@ Route::get('/cpu', [CPUController::class, 'show'])->defaults('algorithm', 'fcfs'
 Route::get('/cpu/{algorithm}', [CPUController::class, 'show'])->name('cpu.algorithm');
 Route::post('/cpu/{algorithm}', [CPUController::class, 'simulate'])->name('cpu.simulate');
 
-Route::get('/deadlock', [DeadlockController::class, 'index'])->name('deadlock');
+// Nếu người dùng gõ '/deadlock', tự động gán mặc định là thuật toán 'banker' (Tránh bế tắc)
+Route::get('/deadlock', [DeadlockController::class, 'show'])->defaults('algorithm', 'banker')->name('deadlock');
 
-Route::get('/page-replacement', [PageReplacementController::class, 'index'])->name('page_replacement');
+// Nếu muốn nhảy thẳng vào từng thuật toán cụ thể
+Route::get('/deadlock/{algorithm}', [DeadlockController::class, 'show'])->name('deadlock.algorithm');
+Route::post('/deadlock/{algorithm}', [DeadlockController::class, 'simulate'])->name('deadlock.simulate');
 
-// http://127.0.0.1:8000/ui-kit
-Route::get('/ui-kit', function () {
-    return view('layouts.ui_kit'); 
-});
+// Nếu người dùng gõ '/page-replacement', tự động gán mặc định là 'fifo'
+Route::get('/page-replacement', [PageReplacementController::class, 'show'])->defaults('algorithm', 'fifo')->name('page-replacement');
+
+// Nếu muốn nhảy thẳng vào từng thuật toán cụ thể
+Route::get('/page-replacement/{algorithm}', [PageReplacementController::class, 'show'])->name('page-replacement.algorithm');
+Route::post('/page-replacement/{algorithm}', [PageReplacementController::class, 'simulate'])->name('page-replacement.simulate');
