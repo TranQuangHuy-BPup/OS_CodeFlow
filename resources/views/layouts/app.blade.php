@@ -74,12 +74,11 @@
 
             {{-- Nút Page Replacement --}}
             <li>
-                <a href="{{ route('page_replacement') }}" class="flex items-center gap-3 px-4 py-3 {{ request()->routeIs('page_replacement*') ? 'bg-white text-primary border-r-4 border-primary shadow-sm' : 'text-slate-600 hover:bg-slate-200' }} transition-all w-full text-left">
+                <a href="{{ route('page-replacement') }}" class="flex items-center gap-3 px-6 py-3.5 text-sm font-bold uppercase tracking-wider {{ request()->routeIs('page-replacement*') ? 'bg-white text-primary border-r-4 border-primary shadow-sm' : 'text-slate-500 hover:bg-slate-200 hover:text-slate-700' }} transition-all w-full text-left">
                     <span class="material-symbols-outlined">find_in_page</span>
                     Page Replacement
                 </a>
             </li>
-        </ul>
         </ul>
 
         {{-- Linh vật Con Vịt trong khung tròn --}}
@@ -127,7 +126,7 @@
                 </a>
 
                 {{-- Tab Page Replacement --}}
-                <a href="{{ route('page_replacement') }}"
+                <a href="{{ route('page-replacement') }}"
                     class="pb-3 px-1 whitespace-nowrap font-bold uppercase tracking-wider text-sm transition-colors border-b-2 {{ request()->routeIs('page_replacement*') ? 'text-primary border-primary' : 'text-slate-500 border-transparent hover:text-slate-700' }}">
                     Page Replacement
                 </a>

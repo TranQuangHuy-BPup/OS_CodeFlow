@@ -1,4 +1,4 @@
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 relative z-10">
+<!-- <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 relative z-10">
     {{-- Ma Trận Allocation --}}
     <div class="bg-white border border-outline-variant rounded-xl shadow-sm overflow-hidden">
         <div class="p-4 border-b border-outline-variant bg-surface-bright flex justify-between items-center">
@@ -80,4 +80,4 @@
             </table>
         </div>
     </div>
-</div>
+</div> -->
