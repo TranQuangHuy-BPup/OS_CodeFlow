@@ -1,83 +1,87 @@
-<!-- <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 relative z-10">
-    {{-- Ma Trận Allocation --}}
-    <div class="bg-white border border-outline-variant rounded-xl shadow-sm overflow-hidden">
-        <div class="p-4 border-b border-outline-variant bg-surface-bright flex justify-between items-center">
-            <h3 class="font-h3 text-h3 text-primary flex items-center gap-2">
-                <span class="material-symbols-outlined">grid_on</span> Allocation Matrix
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 anim-fade-in" style="animation-delay: 0.4s">
+    
+    {{-- 1. Ma Trận Allocation (Dùng chung cho mọi thuật toán) --}}
+    <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-slate-200 bg-slate-50">
+            <h3 class="font-bold text-slate-700 flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">grid_on</span> Allocation Matrix
             </h3>
         </div>
         <div class="overflow-x-auto">
-            <table class="w-full text-center border-collapse font-mono-data text-sm">
-                <thead class="bg-surface-container-low border-b border-outline-variant font-label-caps text-[11px] text-on-surface-variant">
+            <table class="w-full text-center text-sm">
+                <thead class="bg-slate-50/50 border-b border-slate-200 text-slate-500">
                     <tr>
-                        <th class="p-3 border-r border-outline-variant">PID \ Res</th>
-                        <th class="p-3 border-r border-outline-variant text-primary">A</th>
-                        <th class="p-3 border-r border-outline-variant text-primary">B</th>
-                        <th class="p-3 text-primary">C</th>
+                        <th class="p-3">PID</th>
+                        {{-- SỬ DỤNG HÀM chr() CỦA PHP ĐỂ TẠO CHỮ A, B, C... --}}
+                        @if(request('allocation'))
+                            @foreach(request('allocation')[0] as $index => $val)
+                                <th class="p-3 text-primary">{{ chr(65 + $index) }}</th>
+                            @endforeach
+                        @endif
                     </tr>
                 </thead>
-                <tbody class="text-on-surface">
-                    <tr class="border-b border-outline-variant hover:bg-primary-fixed/5 transition-colors">
-                        <th class="p-3 border-r border-outline-variant bg-surface-container-lowest font-bold text-primary">P0</th>
-                        <td class="p-3 border-r border-outline-variant"><input type="number" class="w-full text-center border-none bg-transparent focus:ring-0" value="0"></td>
-                        <td class="p-3 border-r border-outline-variant"><input type="number" class="w-full text-center border-none bg-transparent focus:ring-0" value="1"></td>
-                        <td class="p-3"><input type="number" class="w-full text-center border-none bg-transparent focus:ring-0" value="0"></td>
-                    </tr>
-                    <tr class="border-b border-outline-variant hover:bg-primary-fixed/5 transition-colors">
-                        <th class="p-3 border-r border-outline-variant bg-surface-container-lowest font-bold text-primary">P1</th>
-                        <td class="p-3 border-r border-outline-variant"><input type="number" class="w-full text-center border-none bg-transparent focus:ring-0" value="2"></td>
-                        <td class="p-3 border-r border-outline-variant"><input type="number" class="w-full text-center border-none bg-transparent focus:ring-0" value="0"></td>
-                        <td class="p-3"><input type="number" class="w-full text-center border-none bg-transparent focus:ring-0" value="0"></td>
-                    </tr>
-                    <tr class="hover:bg-primary-fixed/5 transition-colors">
-                        <th class="p-3 border-r border-outline-variant bg-surface-container-lowest font-bold text-primary">P2</th>
-                        <td class="p-3 border-r border-outline-variant"><input type="number" class="w-full text-center border-none bg-transparent focus:ring-0" value="3"></td>
-                        <td class="p-3 border-r border-outline-variant"><input type="number" class="w-full text-center border-none bg-transparent focus:ring-0" value="0"></td>
-                        <td class="p-3"><input type="number" class="w-full text-center border-none bg-transparent focus:ring-0" value="2"></td>
-                    </tr>
+                <tbody>
+                    @if(request('allocation'))
+                        @foreach(request('allocation') as $index => $row)
+                        <tr class="row-anim border-b border-slate-100 last:border-0 hover:bg-slate-50/50 transition-colors" 
+                            style="animation-fill-mode: both; animation-delay: {{ 0.4 + ($loop->iteration * 0.1) }}s">
+                            <th class="p-3 bg-slate-50/30 text-slate-600">P{{ $loop->iteration }}</th>
+                            @foreach($row as $val)
+                                <td class="p-3">{{ $val }}</td>
+                            @endforeach
+                        </tr>
+                        @endforeach
+                    @endif
                 </tbody>
             </table>
         </div>
     </div>
 
-    {{-- Ma Trận Max --}}
-    <div class="bg-white border border-outline-variant rounded-xl shadow-sm overflow-hidden">
-        <div class="p-4 border-b border-outline-variant bg-surface-bright flex justify-between items-center">
-            <h3 class="font-h3 text-h3 text-tertiary flex items-center gap-2">
-                <span class="material-symbols-outlined">apps</span> Max Matrix
+    {{-- 2. Ma Trận Max (Banker) HOẶC Request (Detection/Recovery) --}}
+    <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-slate-200 bg-slate-50">
+            <h3 class="font-bold text-slate-700 flex items-center gap-2">
+                @if($algorithm == 'banker')
+                    <span class="material-symbols-outlined text-tertiary">apps</span> Max Matrix
+                @else
+                    <span class="material-symbols-outlined text-orange-500">pending_actions</span> Request Matrix
+                @endif
             </h3>
         </div>
         <div class="overflow-x-auto">
-            <table class="w-full text-center border-collapse font-mono-data text-sm">
-                <thead class="bg-surface-container-low border-b border-outline-variant font-label-caps text-[11px] text-on-surface-variant">
+            <table class="w-full text-center text-sm">
+                <thead class="bg-slate-50/50 border-b border-slate-200 text-slate-500">
                     <tr>
-                        <th class="p-3 border-r border-outline-variant">PID \ Res</th>
-                        <th class="p-3 border-r border-outline-variant text-tertiary">A</th>
-                        <th class="p-3 border-r border-outline-variant text-tertiary">B</th>
-                        <th class="p-3 text-tertiary">C</th>
+                        <th class="p-3">PID</th>
+                        {{-- Xử lý biến dữ liệu và màu sắc --}}
+                        @php 
+                            $matrixData = ($algorithm == 'banker') ? request('max') : request('request');
+                            $textColor = ($algorithm == 'banker') ? 'text-tertiary' : 'text-orange-600';
+                        @endphp
+                        
+                        {{-- Tự động sinh tiêu đề A, B, C, D... tùy số lượng cột --}}
+                        @if($matrixData)
+                            @foreach($matrixData[0] as $index => $val)
+                                <th class="p-3 {{ $textColor }}">{{ chr(65 + $index) }}</th>
+                            @endforeach
+                        @endif
                     </tr>
                 </thead>
-                <tbody class="text-on-surface">
-                    <tr class="border-b border-outline-variant hover:bg-tertiary-container/5 transition-colors">
-                        <th class="p-3 border-r border-outline-variant bg-surface-container-lowest font-bold text-primary">P0</th>
-                        <td class="p-3 border-r border-outline-variant"><input type="number" class="w-full text-center border-none bg-transparent focus:ring-0" value="7"></td>
-                        <td class="p-3 border-r border-outline-variant"><input type="number" class="w-full text-center border-none bg-transparent focus:ring-0" value="5"></td>
-                        <td class="p-3"><input type="number" class="w-full text-center border-none bg-transparent focus:ring-0" value="3"></td>
-                    </tr>
-                    <tr class="border-b border-outline-variant hover:bg-tertiary-container/5 transition-colors">
-                        <th class="p-3 border-r border-outline-variant bg-surface-container-lowest font-bold text-primary">P1</th>
-                        <td class="p-3 border-r border-outline-variant"><input type="number" class="w-full text-center border-none bg-transparent focus:ring-0" value="3"></td>
-                        <td class="p-3 border-r border-outline-variant"><input type="number" class="w-full text-center border-none bg-transparent focus:ring-0" value="2"></td>
-                        <td class="p-3"><input type="number" class="w-full text-center border-none bg-transparent focus:ring-0" value="2"></td>
-                    </tr>
-                    <tr class="hover:bg-tertiary-container/5 transition-colors">
-                        <th class="p-3 border-r border-outline-variant bg-surface-container-lowest font-bold text-primary">P2</th>
-                        <td class="p-3 border-r border-outline-variant"><input type="number" class="w-full text-center border-none bg-transparent focus:ring-0" value="9"></td>
-                        <td class="p-3 border-r border-outline-variant"><input type="number" class="w-full text-center border-none bg-transparent focus:ring-0" value="0"></td>
-                        <td class="p-3"><input type="number" class="w-full text-center border-none bg-transparent focus:ring-0" value="2"></td>
-                    </tr>
+                <tbody>
+                    @if($matrixData)
+                        @foreach($matrixData as $index => $row)
+                        <tr class="row-anim border-b border-slate-100 last:border-0 hover:bg-slate-50/50 transition-colors" 
+                            style="animation-fill-mode: both; animation-delay: {{ 0.4 + ($loop->iteration * 0.1) }}s">
+                            <th class="p-3 bg-slate-50/30 text-slate-600">P{{ $loop->iteration }}</th>
+                            @foreach($row as $val)
+                                <td class="p-3 font-medium {{ $textColor }}">{{ $val }}</td>
+                            @endforeach
+                        </tr>
+                        @endforeach
+                    @endif
                 </tbody>
             </table>
         </div>
     </div>
-</div> -->
+
+</div>
