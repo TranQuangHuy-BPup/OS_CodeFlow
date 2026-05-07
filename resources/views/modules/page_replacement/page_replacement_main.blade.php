@@ -30,7 +30,8 @@
     {{-- Kết quả mô phỏng --}}
     @if(isset($results))
         <div class="mt-8">
-            @include('modules.page_replacement.partials.visualizer')
+            {{-- Đã sửa ở đây --}}
+            @include('modules.page_replacement.partials.visualization_table')
         </div>
     @endif
 

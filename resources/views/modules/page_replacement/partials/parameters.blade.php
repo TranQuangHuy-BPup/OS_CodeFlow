@@ -1,70 +1,57 @@
-<div class="bg-white rounded-2xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100">
+<div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-slate-100">
     <div class="flex items-center gap-3 mb-6">
-        <div class="p-2 bg-primary/10 rounded-lg">
-            <span class="material-symbols-outlined text-primary">edit_note</span>
+        <div class="p-3 bg-blue-50 rounded-xl shadow-inner">
+            <span class="material-symbols-outlined text-blue-600 text-2xl">settings_input_component</span>
         </div>
-        <h3 class="text-xl font-bold text-slate-800">Cấu hình thông số hệ thống</h3>
+        <h3 class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-600">
+            Cấu hình tham số - Thuật toán {{ strtoupper($algorithm) }}
+        </h3>
     </div>
 
-    <form action="{{ route('deadlock.simulate', ['algorithm' => $algorithm]) }}" method="POST">
+    <form id="simulation-form" action="{{ route('page-replacement.simulate', ['algorithm' => $algorithm]) }}" method="POST">
         @csrf
 
-        {{-- 1. NHẬP SỐ LƯỢNG CƠ BẢN --}}
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div class="space-y-2">
-                <label class="text-sm font-bold text-slate-600 uppercase tracking-wider">Số lượng Tiến trình (Processes)</label>
-                <input type="number" name="num_processes" min="1" max="10" value="5"
-                    class="w-full bg-slate-50 border-slate-200 rounded-xl focus:ring-primary focus:border-primary transition-all">
-            </div>
-            <div class="space-y-2">
-                <label class="text-sm font-bold text-slate-600 uppercase tracking-wider">Số lượng Tài nguyên (Resources)</label>
-                <input type="number" name="num_resources" min="1" max="10" value="3"
-                    class="w-full bg-slate-50 border-slate-200 rounded-xl focus:ring-primary focus:border-primary transition-all">
-            </div>
-        </div>
-
-        {{-- 2. KHU VỰC NHẬP MA TRẬN (Dùng JavaScript để render bảng động) --}}
-        <div class="space-y-6">
-            {{-- Ma trận Allocation - Thuật toán nào cũng cần --}}
-            <div class="p-5 bg-slate-50 rounded-2xl border border-slate-100">
-                <h4 class="font-bold text-slate-700 mb-4 flex items-center gap-2">
-                    <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
-                    Ma trận Allocation (Đã cấp phát)
-                </h4>
-                <div id="allocation-matrix-container" class="overflow-x-auto">
-                    </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="md:col-span-2 space-y-2 group">
+                <label class="text-sm font-bold text-slate-600 uppercase tracking-wider group-hover:text-blue-600 transition-colors">Chuỗi tham chiếu (Reference String)</label>
+                <input type="text" name="reference_string" 
+                    value="{{ request('reference_string', '7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1') }}" 
+                    class="w-full p-4 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-blue-500 rounded-xl outline-none transition-all duration-300 shadow-sm hover:shadow-md text-lg font-mono">
+                <p class="text-xs text-slate-400 italic font-medium mt-1">* Các số cách nhau bằng dấu phẩy</p>
             </div>
 
-            {{-- Ma trận thay đổi tùy theo thuật toán --}}
-            <div class="p-5 bg-slate-50 rounded-2xl border border-slate-100">
-                <h4 class="font-bold text-slate-700 mb-4 flex items-center gap-2">
-                    <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
-                    @if($algorithm == 'banker')
-                        Ma trận Max (Yêu cầu tối đa)
-                    @else
-                        Ma trận Request (Yêu cầu hiện tại)
-                    @endif
-                </h4>
-                <div id="dynamic-matrix-container" class="overflow-x-auto">
-                    </div>
-            </div>
-
-            {{-- Vector Available --}}
-            <div class="p-5 bg-slate-50 rounded-2xl border border-slate-100">
-                <h4 class="font-bold text-slate-700 mb-4 flex items-center gap-2">
-                    <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-                    Vector Available (Tài nguyên đang rảnh)
-                </h4>
-                <div id="available-vector-container" class="flex gap-4">
-                    </div>
+            <div class="space-y-2 group">
+                <label class="text-sm font-bold text-slate-600 uppercase tracking-wider group-hover:text-blue-600 transition-colors">Số khung trang (Frames)</label>
+                <input type="number" name="num_frames" min="1" max="10" 
+                    value="{{ request('num_frames', 3) }}"
+                    class="w-full p-4 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-blue-500 rounded-xl outline-none transition-all duration-300 shadow-sm hover:shadow-md text-lg font-mono text-center">
             </div>
         </div>
 
         <div class="mt-8 flex justify-end">
-            <button type="submit" class="bg-primary hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg shadow-blue-200 transition-all flex items-center gap-2">
-                <span class="material-symbols-outlined">play_arrow</span>
-                Bắt đầu mô phỏng {{ strtoupper($algorithm) }}
+            <button type="submit" id="submit-btn" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg shadow-blue-300/50 hover:shadow-blue-400/50 transform hover:-translate-y-1 transition-all duration-300 flex items-center gap-2">
+                <span id="btn-icon" class="material-symbols-outlined animate-pulse">play_circle</span>
+                <span id="btn-text">Chạy mô phỏng {{ strtoupper($algorithm) }}</span>
             </button>
         </div>
     </form>
 </div>
+
+<script>
+    // Xử lý đổi giao diện nút khi bấm gửi form
+    document.getElementById('simulation-form').onsubmit = function() {
+        const btn = document.getElementById('submit-btn');
+        const icon = document.getElementById('btn-icon');
+        const text = document.getElementById('btn-text');
+
+        // Khóa nút để tránh click spam
+        btn.disabled = true;
+        btn.classList.add('opacity-50', 'cursor-not-allowed');
+        
+        // Đổi hiệu ứng đang xử lý
+        icon.classList.add('animate-spin');
+        icon.classList.remove('animate-pulse');
+        icon.innerText = 'sync';
+        text.innerText = 'Đang xử lý...';
+    };
+</script>
