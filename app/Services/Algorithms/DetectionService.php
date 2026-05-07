@@ -6,8 +6,8 @@ class DetectionService
 {
     public function execute(array $data): array
     {
-        $allocation = $data['allocation'] ?? [];
-        $request = $data['request'] ?? [];
+        $allocation = array_values($data['allocation'] ?? []);
+        $request = array_values($data['request'] ?? []);
         $available = $data['available'] ?? [];
         
         $n = count($allocation);
