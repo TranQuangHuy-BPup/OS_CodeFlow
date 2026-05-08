@@ -11,7 +11,6 @@ class DeadlockController extends Controller
 {
     public function show($algorithm)
     {
-        // Thêm dòng check view tồn tại giống hệt bên CPU
         if (!view()->exists('modules.deadlock.deadlock_main')) {
             abort(404);
         }
@@ -28,27 +27,63 @@ class DeadlockController extends Controller
             abort(404);
         }
 
-        $results = []; // Khởi tạo mảng rỗng y chang bên CPU
+        $results = []; 
 
-        // Xài switch-case y hệt CPUController
         switch ($algorithm) {
             case 'banker': {
-                $results = (new BankersService())->execute($request->all());
+                // 1. Banker dùng ma trận MAX
+                $availableRaw = $request->input('available', []);
+                $allocationRaw = $request->input('allocation', []);
+                $maxRaw = $request->input('max', []);
+
+                $allocationRaw = array_values($allocationRaw);
+                $maxRaw = array_values($maxRaw);
+
+                $data = [
+                    'available' => array_map('intval', $availableRaw),
+                    'allocation' => array_map(function($process) {
+                        return array_map('intval', $process);
+                    }, $allocationRaw),
+                    'max' => array_map(function($process) {
+                        return array_map('intval', $process);
+                    }, $maxRaw)
+                ];
+
+                $results = (new BankersService())->execute($data);
                 break;
             }
+
+            case 'recovery':
             case 'detection': {
-                $results = (new DetectionService())->execute($request->all());
+                // 2. Recovery và Detection dùng chung ma trận REQUEST (Thay vì Max)
+                $availableRaw = $request->input('available', []);
+                $allocationRaw = $request->input('allocation', []);
+                $requestRaw = $request->input('request', []); // Lấy key 'request' từ form
+
+                $allocationRaw = array_values($allocationRaw);
+                $requestRaw = array_values($requestRaw);
+
+                $data = [
+                    'available' => array_map('intval', $availableRaw),
+                    'allocation' => array_map(function($process) {
+                        return array_map('intval', $process);
+                    }, $allocationRaw),
+                    'request' => array_map(function($process) {
+                        return array_map('intval', $process);
+                    }, $requestRaw) // Truyền mảng 'request' vào $data
+                ];
+
+                if ($algorithm === 'recovery') {
+                    $results = (new RecoveryService())->execute($data);
+                } else {
+                    $results = (new DetectionService())->execute($data); // Nếu bạn có làm Detection
+                }
                 break;
             }
-            case 'recovery': {
-                $results = (new RecoveryService())->execute($request->all());
-                break;
-            }
-            default: {
-                // Fallback y chang CPU
+
+            default:
                 $results = []; 
                 break;
-            }
         }
 
         return view('modules.deadlock.deadlock_main', [
