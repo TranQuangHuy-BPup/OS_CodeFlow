@@ -4,7 +4,8 @@
             <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Algorithm</label>
             <select x-model="algo" @change="window.location.href = '/cpu/' + algo" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-700 font-medium focus:ring-2 focus:ring-primary/20 outline-none transition-all">
                 <option value="fcfs">FCFS</option>
-                <option value="sjf_srtf">SJF / SRTF</option>
+                <option value="sjf">SJF</option>
+                <option value="srtf">SRTF</option>
                 <option value="priority">Priority</option>
                 <option value="round_robin">Round Robin</option>
             </select>
