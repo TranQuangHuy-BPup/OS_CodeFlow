@@ -10,7 +10,11 @@
                     <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">PID</th>
                     <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 text-right">Arrival</th>
                     <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 text-right">Burst</th>
-                    <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 text-right">Priority</th>
+                    <th
+                        class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 text-right"
+                        x-show="algo === 'priority'"
+                        x-cloak
+                    >Priority</th>
                     <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 text-center w-20">Actions</th>
                 </tr>
             </thead>
@@ -26,19 +30,40 @@
 
                         <!-- Arrival -->
                         <td class="px-6 py-4 text-right">
-                            <input type="number" x-model.number="p.arrival"
+                            <input
+                                type="number"
+                                min="0"
+                                step="1"
+                                inputmode="numeric"
+                                x-model.number="p.arrival"
+                                @input="p.arrival = Math.max(0, Number($event.target.value || 0))"
+                                @keydown.prevent="['-','e','E','+'].includes($event.key)"
                                 class="w-16 border rounded px-2 py-1 text-right">
                         </td>
 
                         <!-- Burst -->
                         <td class="px-6 py-4 text-right font-bold text-slate-900">
-                            <input type="number" x-model.number="p.burst"
+                            <input
+                                type="number"
+                                min="0"
+                                step="1"
+                                inputmode="numeric"
+                                x-model.number="p.burst"
+                                @input="p.burst = Math.max(0, Number($event.target.value || 0))"
+                                @keydown.prevent="['-','e','E','+'].includes($event.key)"
                                 class="w-16 border rounded px-2 py-1 text-right">
                         </td>
 
                         <!-- Priority -->
-                        <td class="px-6 py-4 text-right">
-                            <input type="number" x-model.number="p.priority"
+                        <td class="px-6 py-4 text-right" x-show="algo === 'priority'" x-cloak>
+                            <input
+                                type="number"
+                                min="0"
+                                step="1"
+                                inputmode="numeric"
+                                x-model.number="p.priority"
+                                @input="p.priority = Math.max(0, Number($event.target.value || 0))"
+                                @keydown.prevent="['-','e','E','+'].includes($event.key)"
                                 class="w-16 border rounded px-2 py-1 text-right">
                         </td>
 

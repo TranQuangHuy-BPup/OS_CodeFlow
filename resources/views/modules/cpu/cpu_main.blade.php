@@ -44,9 +44,9 @@
 
             const normalizeProcess = (p, index) => ({
                 pid: String(p?.pid ?? `P${index + 1}`),
-                arrival: Number.isFinite(Number(p?.arrival)) ? Number(p.arrival) : 0,
-                burst: Number.isFinite(Number(p?.burst)) ? Number(p.burst) : 0,
-                priority: Number.isFinite(Number(p?.priority)) ? Number(p.priority) : 0,
+                arrival: Math.max(0, Number.isFinite(Number(p?.arrival)) ? Number(p.arrival) : 0),
+                burst: Math.max(0, Number.isFinite(Number(p?.burst)) ? Number(p.burst) : 0),
+                priority: Math.max(0, Number.isFinite(Number(p?.priority)) ? Number(p.priority) : 0),
             });
 
             const initial = Array.isArray(parsed) ? parsed.map(normalizeProcess) : [];

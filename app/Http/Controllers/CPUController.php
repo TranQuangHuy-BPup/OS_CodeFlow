@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\Algorithms\FCFSService;
-use App\Services\Algorithms\SJFSRTFService;
+use App\Services\Algorithms\SJFService;
+use App\Services\Algorithms\SRTFService;
 use App\Services\Algorithms\PriorityService;
 use App\Services\Algorithms\RoundRobinService;
 
@@ -39,11 +40,14 @@ class CPUController extends Controller
         $normalized = [];
         foreach ($processes as $i => $p) {
             if (!is_array($p)) continue;
+            $arrival = (int) ($p['arrival'] ?? 0);
+            $burst = (int) ($p['burst'] ?? 0);
+            $priority = (int) ($p['priority'] ?? 0);
             $normalized[] = [
                 'pid' => (string) ($p['pid'] ?? ('P' . ($i + 1))),
-                'arrival' => (int) ($p['arrival'] ?? 0),
-                'burst' => (int) ($p['burst'] ?? 0),
-                'priority' => (int) ($p['priority'] ?? 0),
+                'arrival' => max(0, $arrival),
+                'burst' => max(0, $burst),
+                'priority' => max(0, $priority),
             ];
         }
 
@@ -57,8 +61,14 @@ class CPUController extends Controller
                 $gantt = $out['gantt'] ?? [];
                 break;
             }
-            case 'sjf_srtf': {
-                $out = (new SJFSRTFService())->simulate($normalized);
+            case 'sjf': {
+                $out = (new SJFService())->simulate($normalized);
+                $results = $out['results'] ?? [];
+                $gantt = $out['gantt'] ?? [];
+                break;
+            }
+            case 'srtf': {
+                $out = (new SRTFService())->simulate($normalized);
                 $results = $out['results'] ?? [];
                 $gantt = $out['gantt'] ?? [];
                 break;

@@ -2,11 +2,10 @@
 
 namespace App\Services\Algorithms;
 
-class SJFSRTFService
+class SJFService
 {
     /**
-     * Implement SRTF (Shortest Remaining Time First) to cover both SJF/SRTF page.
-     * Time is simulated in 1-unit steps (integer arrival/burst).
+     * SJF (Shortest Job First) - non-preemptive.
      *
      * @param  array<int, array{pid:string, arrival:int, burst:int, priority?:int}>  $processes
      * @return array{results: array<int, array<string, mixed>>, gantt: array<int, array{pid:string,start:int,end:int}>}
@@ -15,7 +14,7 @@ class SJFSRTFService
     {
         foreach ($processes as $i => &$p) {
             $p['_i'] = $i;
-            $p['arrival'] = (int) ($p['arrival'] ?? 0);
+            $p['arrival'] = max(0, (int) ($p['arrival'] ?? 0));
             $p['burst'] = max(0, (int) ($p['burst'] ?? 0));
             $p['pid'] = (string) ($p['pid'] ?? ('P' . ($i + 1)));
         }
@@ -24,54 +23,45 @@ class SJFSRTFService
         $procs = $processes;
         usort($procs, fn($a, $b) => ($a['arrival'] <=> $b['arrival']) ?: ($a['_i'] <=> $b['_i']));
 
-        $remaining = [];
+        $done = [];
         $firstStart = [];
         $completion = [];
-        $arrivals = [];
-        $bursts = [];
-        foreach ($procs as $p) {
-            $remaining[$p['pid']] = $p['burst'];
-            $arrivals[$p['pid']] = $p['arrival'];
-            $bursts[$p['pid']] = $p['burst'];
-        }
+        $gantt = [];
 
         $time = 0;
-        $gantt = [];
-        $finished = 0;
         $n = count($procs);
 
-        $nextArrival = $n ? (int) $procs[0]['arrival'] : 0;
-        $time = min(0, $nextArrival);
-
-        while ($finished < $n) {
-            // Find available processes
+        while (count($done) < $n) {
             $available = [];
             foreach ($procs as $p) {
                 $pid = $p['pid'];
-                if (isset($completion[$pid])) continue;
-                if ($p['arrival'] <= $time && ($remaining[$pid] ?? 0) > 0) {
-                    $available[] = $p;
+                if (isset($done[$pid])) continue;
+                if ($p['arrival'] <= $time && $p['burst'] > 0) $available[] = $p;
+                if ($p['arrival'] <= $time && $p['burst'] === 0) {
+                    // Burst=0 completes immediately at current time (or arrival if CPU idle before time).
+                    if (!isset($firstStart[$pid])) $firstStart[$pid] = $time;
+                    $completion[$pid] = $time;
+                    $done[$pid] = true;
                 }
             }
 
+            if (count($done) >= $n) break;
+
             if (!$available) {
-                // Idle until next arrival.
                 $next = null;
                 foreach ($procs as $p) {
                     $pid = $p['pid'];
-                    if (isset($completion[$pid])) continue;
+                    if (isset($done[$pid])) continue;
                     if ($p['arrival'] > $time) $next = $next === null ? $p['arrival'] : min($next, $p['arrival']);
                 }
                 $next = $next ?? ($time + 1);
-                $gantt[] = ['pid' => 'IDLE', 'start' => $time, 'end' => $next];
+                if ($next > $time) $gantt[] = ['pid' => 'IDLE', 'start' => $time, 'end' => $next];
                 $time = $next;
                 continue;
             }
 
-            usort($available, function ($a, $b) use ($remaining) {
-                $ra = $remaining[$a['pid']] ?? 0;
-                $rb = $remaining[$b['pid']] ?? 0;
-                if ($ra !== $rb) return $ra <=> $rb;
+            usort($available, function ($a, $b) {
+                if ($a['burst'] !== $b['burst']) return $a['burst'] <=> $b['burst'];
                 if ($a['arrival'] !== $b['arrival']) return $a['arrival'] <=> $b['arrival'];
                 return $a['_i'] <=> $b['_i'];
             });
@@ -80,15 +70,13 @@ class SJFSRTFService
             $pid = $p['pid'];
             if (!isset($firstStart[$pid])) $firstStart[$pid] = $time;
 
-            // Run exactly 1 time unit
-            $gantt[] = ['pid' => $pid, 'start' => $time, 'end' => $time + 1];
-            $remaining[$pid] -= 1;
-            $time += 1;
+            $start = $time;
+            $end = $time + (int) $p['burst'];
+            $gantt[] = ['pid' => $pid, 'start' => $start, 'end' => $end];
+            $time = $end;
 
-            if ($remaining[$pid] <= 0) {
-                $completion[$pid] = $time;
-                $finished++;
-            }
+            $completion[$pid] = $time;
+            $done[$pid] = true;
         }
 
         $results = [];
