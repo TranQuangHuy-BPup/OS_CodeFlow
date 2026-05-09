@@ -37,9 +37,24 @@
                     @endforeach
                 </div>
 
-                <div class="flex justify-between text-xs text-slate-500 font-mono">
-                    <span>{{ (int)($segments[0]['start'] ?? 0) }}</span>
-                    <span>{{ (int)($segments[count($segments)-1]['end'] ?? 0) }}</span>
+                {{-- Timeline: hiển thị đầy đủ các mốc thời gian theo từng segment --}}
+                <div class="flex w-full text-xs text-slate-500 font-mono select-none">
+                    @foreach($segments as $seg)
+                        @php
+                            $start = (int)($seg['start'] ?? 0);
+                            $end = (int)($seg['end'] ?? 0);
+                            $dur = max(0, $end - $start);
+                            $w = ($dur / $total) * 100;
+                        @endphp
+                        @if($dur > 0)
+                            <div class="relative h-5" style="width: {{ $w }}%; min-width: 36px;">
+                                @if($loop->first)
+                                    <span class="absolute left-0 bottom-0">{{ $start }}</span>
+                                @endif
+                                <span class="absolute right-0 bottom-0">{{ $end }}</span>
+                            </div>
+                        @endif
+                    @endforeach
                 </div>
             </div>
         @else

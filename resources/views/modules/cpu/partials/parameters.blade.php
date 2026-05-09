@@ -25,10 +25,15 @@
         <div class="col-span-1 md:col-start-3 md:col-span-2 flex gap-3 justify-end">
             <button
                 type="submit"
-                class="bg-primary text-white px-6 py-2.5 rounded-xl font-bold">
+                class="bg-primary text-white px-6 py-2.5 rounded-xl font-bold shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/25"
+            >
                 Simulate
             </button>
-            <button @click="window.location.reload()" class="bg-white border border-slate-200 text-slate-600 px-6 py-2.5 rounded-xl font-bold hover:bg-slate-50 active:scale-95 transition-all flex items-center gap-2 shadow-sm">
+            <button
+                type="button"
+                @click="resetForm()"
+                class="bg-white border border-slate-200 text-slate-600 px-6 py-2.5 rounded-xl font-bold shadow-sm hover:bg-slate-50 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-slate-400/20 flex items-center gap-2"
+            >
                 <span class="material-symbols-outlined text-base">restart_alt</span> Reset
             </button>
         </div>

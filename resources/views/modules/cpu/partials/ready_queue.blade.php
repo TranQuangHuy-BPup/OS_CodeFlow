@@ -1,7 +1,13 @@
 <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden mb-8">
     <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
         <h3>Process Queue</h3>
-        <button type="button" @click="addProcess()" class="text-primary font-bold text-sm flex items-center gap-1 hover:text-blue-700 transition-colors">Add Process</button>
+        <button
+            type="button"
+            @click="addProcess()"
+            class="text-primary font-bold text-sm flex items-center gap-1 hover:text-blue-700 hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/20 rounded-lg px-2 py-1"
+        >
+            Add Process
+        </button>
     </div>
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
@@ -69,7 +75,12 @@
 
                         <!-- Delete -->
                         <td class="px-6 py-4 text-center">
-                            <button @click="removeProcess(index)" class="text-red-500 hover:text-red-700">
+                            <button
+                                @click="removeProcess(index)"
+                                class="text-red-500 hover:text-red-700 hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500/20 rounded-lg p-1"
+                                title="Remove process"
+                                type="button"
+                            >
                                 <span class="material-symbols-outlined text-lg">delete</span>
                             </button>
                         </td>
