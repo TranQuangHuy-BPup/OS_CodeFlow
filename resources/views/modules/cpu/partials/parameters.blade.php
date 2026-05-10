@@ -1,4 +1,4 @@
-<div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm mb-8">
+<div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm mb-8 anim-fade-in">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
         <div class="md:col-span-1">
             <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Algorithm</label>
@@ -40,3 +40,13 @@
     </div>
 </div>
 
+<style>
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .anim-fade-in { animation: fadeIn 0.5s ease forwards; }
+    
+    @keyframes slideRow { from { opacity: 0; transform: translateX(-15px); } to { opacity: 1; transform: translateX(0); } }
+    .row-anim { animation: slideRow 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+    
+    @keyframes scaleIn { from { transform: scaleX(0); opacity: 0; } to { transform: scaleX(1); opacity: 1; } }
+    .anim-scale-in { animation: scaleIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; transform-origin: left; opacity: 0; }
+</style>

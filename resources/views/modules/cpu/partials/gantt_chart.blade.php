@@ -1,4 +1,4 @@
-<div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden mb-8">
+<div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden mb-8 anim-fade-in" style="animation-delay: 0.2s; animation-fill-mode: both;">
     <div class="px-6 py-4 border-b border-slate-200 bg-slate-50">
         <h3>Gantt Chart</h3>
     </div>
@@ -27,8 +27,8 @@
                         @endphp
                         @if($dur > 0)
                             <div
-                                class="{{ $isIdle ? 'bg-slate-200 text-slate-600' : 'bg-primary text-white' }} flex items-center justify-center text-xs font-bold border-r border-white/40"
-                                style="width: {{ $w }}%; min-width: 36px;"
+                                class="{{ $isIdle ? 'bg-slate-200 text-slate-600' : 'bg-primary text-white' }} flex items-center justify-center text-xs font-bold border-r border-white/40 anim-scale-in"
+                                style="width: {{ $w }}%; min-width: 36px; animation-delay: {{ 0.3 + ($loop->index * 0.08) }}s;"
                                 title="{{ $pid }} ({{ $start }} → {{ $end }})"
                             >
                                 {{ $pid }}
@@ -37,7 +37,6 @@
                     @endforeach
                 </div>
 
-                {{-- Timeline: hiển thị đầy đủ các mốc thời gian theo từng segment --}}
                 <div class="flex w-full text-xs text-slate-500 font-mono select-none">
                     @foreach($segments as $seg)
                         @php
@@ -47,7 +46,7 @@
                             $w = ($dur / $total) * 100;
                         @endphp
                         @if($dur > 0)
-                            <div class="relative h-5" style="width: {{ $w }}%; min-width: 36px;">
+                            <div class="relative h-5 anim-fade-in" style="width: {{ $w }}%; min-width: 36px; animation-delay: {{ 0.4 + ($loop->index * 0.08) }}s; animation-fill-mode: both;">
                                 @if($loop->first)
                                     <span class="absolute left-0 bottom-0">{{ $start }}</span>
                                 @endif

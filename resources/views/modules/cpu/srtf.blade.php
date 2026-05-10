@@ -1,4 +1,4 @@
-<div class="bg-white p-6 rounded-xl shadow-sm border border-outline-variant" x-transition>
+<div class="bg-white p-6 rounded-xl shadow-sm border border-outline-variant anim-fade-in" style="animation-delay: 0.3s; animation-fill-mode: both;" x-transition>
     <h3 class="font-h3 text-on-primary-container mb-4 flex items-center gap-2">
         <span class="material-symbols-outlined">analytics</span>
         Result: {{ strtoupper(str_replace('_', ' ', $algorithm)) }}
@@ -18,8 +18,8 @@
             </thead>
             <tbody class="font-mono-data text-sm">
                 @if(isset($results))
-                    @foreach($results as $res)
-                        <tr class="hover:bg-primary-fixed/5 transition-colors">
+                    @foreach($results as $index => $res)
+                        <tr class="hover:bg-primary-fixed/5 transition-colors row-anim" style="animation-fill-mode: both; animation-delay: {{ 0.4 + ($index * 0.05) }}s">
                             <td class="px-3 py-3 border border-outline-variant font-bold text-primary">{{ $res['pid'] }}</td>
                             <td class="px-3 py-3 border border-outline-variant text-right">{{ $res['arrival'] ?? '--' }}</td>
                             <td class="px-3 py-3 border border-outline-variant text-right">{{ $res['cpu'] ?? '--' }}</td>
@@ -43,4 +43,3 @@
         </table>
     </div>
 </div>
-
