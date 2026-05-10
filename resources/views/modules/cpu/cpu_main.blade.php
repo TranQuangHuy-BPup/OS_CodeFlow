@@ -66,6 +66,12 @@
                     this.processes.splice(index, 1);
                     if (this.processes.length === 0) this.addProcess();
                 },
+
+                resetForm() {
+                    this.quantum = 2;
+                    this.processes = [normalizeProcess({}, 0)];
+                    window.location.href = '/cpu/' + this.algo;
+                },
             };
         }
     </script>
