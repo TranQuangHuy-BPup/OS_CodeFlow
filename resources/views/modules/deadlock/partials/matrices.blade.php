@@ -12,9 +12,9 @@
                 <thead class="bg-slate-50/50 border-b border-slate-200 text-slate-500">
                     <tr>
                         <th class="p-3">PID</th>
-                        {{-- SỬ DỤNG HÀM chr() CỦA PHP ĐỂ TẠO CHỮ A, B, C... --}}
+                        {{-- SỬA LỖI: Dùng current() thay vì [0] --}}
                         @if(request('allocation'))
-                            @foreach(request('allocation')[0] as $index => $val)
+                            @foreach(current(request('allocation')) as $index => $val)
                                 <th class="p-3 text-primary">{{ chr(65 + $index) }}</th>
                             @endforeach
                         @endif
@@ -59,9 +59,9 @@
                             $textColor = ($algorithm == 'banker') ? 'text-tertiary' : 'text-orange-600';
                         @endphp
                         
-                        {{-- Tự động sinh tiêu đề A, B, C, D... tùy số lượng cột --}}
+                        {{-- SỬA LỖI: Dùng current() thay vì [0] --}}
                         @if($matrixData)
-                            @foreach($matrixData[0] as $index => $val)
+                            @foreach(current($matrixData) as $index => $val)
                                 <th class="p-3 {{ $textColor }}">{{ chr(65 + $index) }}</th>
                             @endforeach
                         @endif
