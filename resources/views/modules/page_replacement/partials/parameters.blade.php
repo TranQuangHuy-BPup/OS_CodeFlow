@@ -17,7 +17,7 @@
                 <input type="text" name="reference_string" 
                     value="{{ request('reference_string', '7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1') }}" 
                     class="w-full p-4 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-blue-500 rounded-xl outline-none transition-all duration-300 shadow-sm hover:shadow-md text-lg font-mono">
-                <p class="text-xs text-slate-400 italic font-medium mt-1">* Các số cách nhau bằng dấu phẩy</p>
+                <p class="text-base text-slate-400 italic font-medium mt-1">* Các số cách nhau bằng dấu phẩy</p>
             </div>
 
             <div class="space-y-2 group">
