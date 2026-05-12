@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Services\Algorithms\FIFOService;
 use App\Services\Algorithms\OPTService;
 use App\Services\Algorithms\LRUService;
+use App\Services\Algorithms\ClockService;
 
 class PageReplacementController extends Controller
 {
@@ -43,6 +44,10 @@ class PageReplacementController extends Controller
             case 'lru': {
                 $results = (new LRUService())->execute($request->all());
                 break;
+            }
+            case 'clock': {
+            $results = (new ClockService())->execute($request->all());
+            break;
             }
             default: {
                 $results = [];

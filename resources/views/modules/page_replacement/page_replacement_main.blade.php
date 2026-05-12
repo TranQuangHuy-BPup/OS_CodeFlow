@@ -22,6 +22,10 @@
            class="px-6 py-2.5 rounded-lg text-sm font-bold transition-all {{ $algorithm == 'lru' ? 'bg-white text-primary shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">
             LRU
         </a>
+        <a href="{{ route('page-replacement.algorithm', ['algorithm' => 'clock']) }}" 
+           class="px-6 py-2.5 rounded-lg text-sm font-bold transition-all {{ $algorithm == 'clock' ? 'bg-white text-primary shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">
+            Clock
+        </a>
     </div>
 
     {{-- Form nhập liệu --}}
