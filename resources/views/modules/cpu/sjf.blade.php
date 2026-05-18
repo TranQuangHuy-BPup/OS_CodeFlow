@@ -29,6 +29,23 @@
                             <td class="px-4 py-4 border border-outline-variant text-right">{{ $res['response'] ?? '--' }}</td>
                         </tr>
                     @endforeach
+                    @php
+                        $count = count($results);
+                        $avgCompletion = collect($results)->avg('completion');
+                        $avgWaiting    = collect($results)->avg('waiting_time');
+                        $avgTurnaround = collect($results)->avg('turnaround');
+                        $avgResponse   = collect($results)->avg('response');
+                    @endphp
+                    
+                    <tr class="bg-slate-50 border-t-2 border-slate-300 row-anim" style="animation-fill-mode: both; animation-delay: {{ 0.4 + ($count * 0.05) }}s">
+                        <td colspan="3" class="px-4 py-4 border border-outline-variant text-right font-bold uppercase text-sm text-slate-600 tracking-wider">
+                            Trung bình (Average)
+                        </td>
+                        <td class="px-4 py-4 border border-outline-variant text-right font-black text-primary">{{ number_format($avgCompletion, 2) }}</td>
+                        <td class="px-4 py-4 border border-outline-variant text-right font-black text-error">{{ number_format($avgWaiting, 2) }}</td>
+                        <td class="px-4 py-4 border border-outline-variant text-right font-black text-tertiary">{{ number_format($avgTurnaround, 2) }}</td>
+                        <td class="px-4 py-4 border border-outline-variant text-right font-black text-slate-800">{{ number_format($avgResponse, 2) }}</td>
+                    </tr>
                 @else
                     <tr>
                         <td colspan="7" class="px-4 py-12 text-center italic text-on-surface-variant">
