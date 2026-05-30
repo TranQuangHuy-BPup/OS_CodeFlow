@@ -1,6 +1,6 @@
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 anim-fade-in" style="animation-delay: 0.4s">
     
-    {{-- 1. Ma Trận Allocation (Dùng chung cho mọi thuật toán) --}}
+    {{-- 1. Ma Trận Allocation --}}
     <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
         <div class="p-4 border-b border-slate-200 bg-slate-50">
             <h3 class="font-bold text-slate-700 flex items-center gap-2">
@@ -12,7 +12,6 @@
                 <thead class="bg-slate-50/50 border-b border-slate-200 text-slate-500">
                     <tr>
                         <th class="p-3">PID</th>
-                        {{-- SỬA LỖI: Dùng current() thay vì [0] --}}
                         @if(request('allocation'))
                             @foreach(current(request('allocation')) as $index => $val)
                                 <th class="p-3 text-primary">{{ chr(65 + $index) }}</th>
@@ -37,15 +36,11 @@
         </div>
     </div>
 
-    {{-- 2. Ma Trận Max (Banker) HOẶC Request (Detection/Recovery) --}}
+    {{-- 2. Ma Trận Max (Banker) --}}
     <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
         <div class="p-4 border-b border-slate-200 bg-slate-50">
             <h3 class="font-bold text-slate-700 flex items-center gap-2">
-                @if($algorithm == 'banker')
-                    <span class="material-symbols-outlined text-tertiary">apps</span> Max Matrix
-                @else
-                    <span class="material-symbols-outlined text-orange-500">pending_actions</span> Request Matrix
-                @endif
+                <span class="material-symbols-outlined text-tertiary">apps</span> Max Matrix
             </h3>
         </div>
         <div class="overflow-x-auto">
@@ -53,28 +48,21 @@
                 <thead class="bg-slate-50/50 border-b border-slate-200 text-slate-500">
                     <tr>
                         <th class="p-3">PID</th>
-                        {{-- Xử lý biến dữ liệu và màu sắc --}}
-                        @php 
-                            $matrixData = ($algorithm == 'banker') ? request('max') : request('request');
-                            $textColor = ($algorithm == 'banker') ? 'text-tertiary' : 'text-orange-600';
-                        @endphp
-                        
-                        {{-- SỬA LỖI: Dùng current() thay vì [0] --}}
-                        @if($matrixData)
-                            @foreach(current($matrixData) as $index => $val)
-                                <th class="p-3 {{ $textColor }}">{{ chr(65 + $index) }}</th>
+                        @if(request('max'))
+                            @foreach(current(request('max')) as $index => $val)
+                                <th class="p-3 text-tertiary">{{ chr(65 + $index) }}</th>
                             @endforeach
                         @endif
                     </tr>
                 </thead>
                 <tbody>
-                    @if($matrixData)
-                        @foreach($matrixData as $index => $row)
+                    @if(request('max'))
+                        @foreach(request('max') as $index => $row)
                         <tr class="row-anim border-b border-slate-100 last:border-0 hover:bg-slate-50/50 transition-colors" 
                             style="animation-fill-mode: both; animation-delay: {{ 0.4 + ($loop->iteration * 0.1) }}s">
                             <th class="p-3 bg-slate-50/30 text-slate-600">P{{ $loop->iteration }}</th>
                             @foreach($row as $val)
-                                <td class="p-3 font-medium {{ $textColor }}">{{ $val }}</td>
+                                <td class="p-3 font-medium text-tertiary">{{ $val }}</td>
                             @endforeach
                         </tr>
                         @endforeach
