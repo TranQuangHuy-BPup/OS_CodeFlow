@@ -22,6 +22,7 @@ class CPUController extends Controller
             'results' => null,
             'processesJson' => '[]',
             'quantum' => 2,
+            'mode' => 'non_preemptive', // <-- Bổ sung biến mode mặc định
         ]);
     }
 
@@ -33,6 +34,9 @@ class CPUController extends Controller
 
         $processesJson = (string) $request->input('processes_json', '[]');
         $quantum = (int) $request->input('quantum', 2);
+        
+        // <-- Bổ sung: Lấy biến mode từ request (mặc định là non_preemptive nếu không có)
+        $mode = (string) $request->input('mode', 'non_preemptive'); 
 
         $decoded = json_decode($processesJson, true);
         $processes = is_array($decoded) ? $decoded : [];
@@ -74,7 +78,8 @@ class CPUController extends Controller
                 break;
             }
             case 'priority': {
-                $out = (new PriorityService())->simulate($normalized);
+                // <-- Bổ sung: Truyền thêm tham số $mode vào PriorityService
+                $out = (new PriorityService())->simulate($normalized, $mode);
                 $results = $out['results'] ?? [];
                 $gantt = $out['gantt'] ?? [];
                 break;
@@ -109,6 +114,7 @@ class CPUController extends Controller
             'gantt' => $gantt,
             'processesJson' => json_encode($normalized, JSON_UNESCAPED_UNICODE),
             'quantum' => $quantum > 0 ? $quantum : 2,
+            'mode' => $mode, // <-- Bổ sung: Trả biến mode về lại View để giữ nguyên lựa chọn ở thẻ <select>
         ]);
     }
 }

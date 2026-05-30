@@ -1,5 +1,5 @@
 <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm mb-8 anim-fade-in">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-6 items-end">
         <div class="md:col-span-1">
             <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Algorithm</label>
             <select x-model="algo" @change="window.location.href = '/cpu/' + algo" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-700 font-medium focus:ring-2 focus:ring-primary/20 outline-none transition-all">
@@ -10,6 +10,7 @@
                 <option value="round_robin">Round Robin</option>
             </select>
         </div>
+        
         {{-- Quantum Time (Chỉ hiện khi chọn RR) --}}
         <div class="md:col-span-1" x-show="algo === 'round_robin'" x-cloak>
             <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Time Quantum</label>
@@ -17,12 +18,24 @@
                 type="number"
                 min="1"
                 step="1"
+                name="quantum"
+                value="{{ request('quantum', 2) }}"
                 x-model.number="quantum"
                 class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-700 font-mono focus:ring-2 focus:ring-primary/20 outline-none transition-all"
             >
         </div>
-        {{-- Action Buttons (Cố định vị trí bên phải) --}}
-        <div class="col-span-1 md:col-start-3 md:col-span-2 flex gap-3 justify-end">
+
+        {{-- Mode Selector (Chỉ hiện khi chọn Priority) --}}
+        <div class="md:col-span-1" x-show="algo === 'priority'" x-cloak>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Mode</label>
+            <select name="mode" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-700 font-medium focus:ring-2 focus:ring-primary/20 outline-none transition-all">
+                <option value="non_preemptive" {{ request('mode') === 'non_preemptive' ? 'selected' : '' }}>Non-Preemptive</option>
+                <option value="preemptive" {{ request('mode') === 'preemptive' ? 'selected' : '' }}>Preemptive</option>
+            </select>
+        </div>
+
+        {{-- Action Buttons --}}
+        <div class="col-span-1 md:col-start-4 md:col-span-2 flex gap-3 justify-end">
             <button
                 type="submit"
                 class="bg-primary text-white px-6 py-2.5 rounded-xl font-bold shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/25"
