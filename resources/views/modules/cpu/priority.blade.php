@@ -1,7 +1,10 @@
 <div class="bg-white p-6 rounded-xl shadow-sm border border-outline-variant anim-fade-in" style="animation-delay: 0.3s; animation-fill-mode: both;" x-transition>
     <h3 class="font-h3 text-on-primary-container mb-4 flex items-center gap-2">
         <span class="material-symbols-outlined">analytics</span> 
-        Result: {{ strtoupper(str_replace('_', ' ', $algorithm)) }}
+        Result: {{ strtoupper(str_replace('_', ' ', $algorithm)) }} 
+        <span class="text-sm font-medium px-3 py-1 bg-primary/10 text-primary rounded-full ml-2">
+            {{ request('mode') === 'preemptive' ? 'Preemptive' : 'Non-Preemptive' }}
+        </span>
     </h3>
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse border border-outline-variant rounded-lg">
