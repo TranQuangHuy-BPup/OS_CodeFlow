@@ -6,22 +6,14 @@
     {{-- 1. TIÊU ĐỀ BÀI TOÁN --}}
     <div class="mb-8">
         <h1 class="text-3xl font-black text-slate-800 tracking-tight">Deadlock Analysis</h1>
-        <p class="text-slate-500 mt-2">Mô phỏng các chiến lược xử lý bế tắc tài nguyên trong Hệ điều hành</p>
+        <p class="text-slate-500 mt-2">Mô phỏng chiến lược xử lý bế tắc tài nguyên trong Hệ điều hành</p>
     </div>
 
     {{-- 2. THANH MENU ĐIỀU HƯỚNG CỦA RIÊNG DEADLOCK --}}
     <div class="flex space-x-2 bg-slate-200/50 p-1 rounded-xl w-fit mb-8">
         <a href="{{ route('deadlock.algorithm', ['algorithm' => 'banker']) }}" 
            class="px-6 py-2.5 rounded-lg text-sm font-bold transition-all {{ $algorithm == 'banker' ? 'bg-white text-primary shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">
-            Banker's Algorithm (Tránh)
-        </a>
-        <a href="{{ route('deadlock.algorithm', ['algorithm' => 'detection']) }}" 
-           class="px-6 py-2.5 rounded-lg text-sm font-bold transition-all {{ $algorithm == 'detection' ? 'bg-white text-primary shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">
-            Detection (Phát hiện)
-        </a>
-        <a href="{{ route('deadlock.algorithm', ['algorithm' => 'recovery']) }}" 
-           class="px-6 py-2.5 rounded-lg text-sm font-bold transition-all {{ $algorithm == 'recovery' ? 'bg-white text-primary shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">
-            Recovery (Phục hồi)
+            Banker's Algorithm
         </a>
     </div>
 

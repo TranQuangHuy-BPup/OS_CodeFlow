@@ -1,5 +1,5 @@
 <div class="bg-white rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.06)] mb-8 transition-all duration-500 hover:shadow-lg anim-fade-in">
-    <form action="{{ route('deadlock.simulate', ['algorithm' => $algorithm]) }}" method="POST" id="deadlock-form">
+    <form action="{{ route('deadlock.simulate', ['algorithm' => 'banker']) }}" method="POST" id="deadlock-form">
         @csrf
         
         {{-- 1. NHẬP VECTOR AVAILABLE (Tài nguyên sẵn có) --}}
@@ -7,7 +7,7 @@
             <h4 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center justify-between">
                 <span class="flex items-center gap-2">
                     <span class="material-symbols-outlined text-primary">inventory_2</span>
-                    Available Resources (Số thực thể sẵn có)
+                    Available Resources (Số tài nguyên sẵn có)
                 </span>
                 <div class="flex gap-2">
                     <button type="button" id="btn-remove-resource" class="hidden text-xs font-bold text-red-500 hover:text-red-700 flex items-center gap-1 transition-all active:scale-95 bg-red-50 px-3 py-1.5 rounded-lg">
@@ -34,7 +34,7 @@
             <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-4">
                 <h4 class="text-sm font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
                     <span class="material-symbols-outlined text-primary">view_agenda</span>
-                    Process Matrices
+                    Process Matrix
                 </h4>
                 <button type="button" id="btn-add-process" 
                         class="text-sm font-bold text-white bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg flex items-center gap-2 transition-all active:scale-95 shadow-md">
@@ -70,20 +70,16 @@
                             </div>
                         </div>
 
-                        {{-- Cột Request/Max --}}
+                        {{-- Cột Max --}}
                         <div class="bg-slate-50/50 p-4 rounded-lg border border-slate-100">
-                            @php 
-                                $inputName = ($algorithm == 'banker') ? 'max' : 'request'; 
-                                $colorClass = ($algorithm == 'banker') ? 'text-tertiary focus:ring-tertiary focus:border-tertiary' : 'text-orange-600 focus:ring-orange-500 focus:border-orange-500';
-                            @endphp
-                            <span class="text-xs font-bold uppercase tracking-wider mb-3 block {{ $algorithm == 'banker' ? 'text-tertiary' : 'text-orange-500' }}">
-                                {{ $algorithm == 'banker' ? 'Max Matrix' : 'Request Matrix' }}
+                            <span class="text-xs font-bold uppercase tracking-wider mb-3 block text-tertiary">
+                                Max Matrix
                             </span>
-                            <div class="flex flex-wrap gap-3 request-inputs">
+                            <div class="flex flex-wrap gap-3 max-inputs">
                                 @foreach(['A', 'B', 'C'] as $res)
                                 <div class="flex flex-col items-center gap-1 group">
                                     <span class="text-[10px] font-bold text-slate-400 resource-label">{{ $res }}</span>
-                                    <input type="number" name="{{ $inputName }}[0][]" value="0" min="0" class="w-14 h-9 text-center rounded-lg border-slate-200 text-sm font-bold font-mono shadow-sm {{ $colorClass }}">
+                                    <input type="number" name="max[0][]" value="0" min="0" class="w-14 h-9 text-center rounded-lg border-slate-200 text-sm font-bold font-mono shadow-sm text-tertiary focus:ring-tertiary focus:border-tertiary">
                                 </div>
                                 @endforeach
                             </div>
@@ -97,7 +93,7 @@
         <div class="flex justify-end pt-6 border-t border-slate-100 mt-8">
             <button type="submit" class="btn-simulate bg-primary text-white px-8 py-3.5 rounded-xl font-bold shadow-lg shadow-primary/30 hover:shadow-primary/50 hover:-translate-y-0.5 transition-all flex items-center gap-3 text-lg">
                 <span class="material-symbols-outlined btn-icon text-2xl">analytics</span>
-                <span>Chạy mô phỏng {{ strtoupper($algorithm) }}</span>
+                <span>Chạy mô phỏng BANKER</span>
             </button>
         </div>
     </form>
@@ -118,9 +114,6 @@
 
 <script>
     let resourceCount = 3;
-    const currentAlgo = "{{ $algorithm }}";
-    const requestInputName = (currentAlgo === 'banker') ? 'max' : 'request';
-    const requestColorClass = (currentAlgo === 'banker') ? 'text-tertiary focus:ring-tertiary focus:border-tertiary' : 'text-orange-600 focus:ring-orange-500 focus:border-orange-500';
 
     function updateRemoveButton() {
         const btnRemove = document.getElementById('btn-remove-resource');
@@ -144,9 +137,8 @@
             </div>
         `);
 
-        // 2. Thêm input vào mỗi khối Allocation và Request của từng Process
+        // 2. Thêm input vào mỗi khối Allocation và Max của từng Process
         document.querySelectorAll('.process-card').forEach((card) => {
-            // Xác định Index của Process hiện tại (để gom mảng PHP cho đúng)
             const firstInput = card.querySelector('.allocation-inputs input');
             const match = firstInput.name.match(/\[(\d+)\]/);
             const rowIndex = match ? match[1] : Date.now();
@@ -159,11 +151,11 @@
                 </div>
             `);
 
-            const reqDiv = card.querySelector('.request-inputs');
-            reqDiv.insertAdjacentHTML('beforeend', `
+            const maxDiv = card.querySelector('.max-inputs');
+            maxDiv.insertAdjacentHTML('beforeend', `
                 <div class="flex flex-col items-center gap-1 group anim-pop-in">
                     <span class="text-[10px] font-bold text-slate-400 resource-label">${resName}</span>
-                    <input type="number" name="${requestInputName}[${rowIndex}][]" value="0" min="0" class="w-14 h-9 text-center rounded-lg border-slate-200 text-sm font-bold font-mono shadow-sm ${requestColorClass} anim-pop-in">
+                    <input type="number" name="max[${rowIndex}][]" value="0" min="0" class="w-14 h-9 text-center rounded-lg border-slate-200 text-sm font-bold font-mono shadow-sm text-tertiary focus:ring-tertiary focus:border-tertiary anim-pop-in">
                 </div>
             `);
         });
@@ -179,7 +171,7 @@
         
         document.querySelectorAll('.process-card').forEach((card) => {
             card.querySelector('.allocation-inputs').lastElementChild.remove();
-            card.querySelector('.request-inputs').lastElementChild.remove();
+            card.querySelector('.max-inputs').lastElementChild.remove();
         });
 
         resourceCount--;
@@ -199,9 +191,8 @@
         const nextId = maxPid + 1;
         const index = Date.now();
 
-        // Tạo sẵn các khối HTML chứa input A, B, C, D... tùy theo resourceCount hiện tại
         let allocInputs = '';
-        let reqInputs = '';
+        let maxInputsHtml = '';
         for(let i=0; i<resourceCount; i++) {
             const resName = String.fromCharCode(65 + i);
             allocInputs += `
@@ -209,15 +200,12 @@
                     <span class="text-[10px] font-bold text-slate-400 resource-label">${resName}</span>
                     <input type="number" name="allocation[${index}][]" value="0" min="0" class="w-14 h-9 text-center rounded-lg border-slate-200 text-sm focus:ring-primary focus:border-primary font-mono shadow-sm">
                 </div>`;
-            reqInputs += `
+            maxInputsHtml += `
                 <div class="flex flex-col items-center gap-1 group">
                     <span class="text-[10px] font-bold text-slate-400 resource-label">${resName}</span>
-                    <input type="number" name="${requestInputName}[${index}][]" value="0" min="0" class="w-14 h-9 text-center rounded-lg border-slate-200 text-sm font-bold font-mono shadow-sm ${requestColorClass}">
+                    <input type="number" name="max[${index}][]" value="0" min="0" class="w-14 h-9 text-center rounded-lg border-slate-200 text-sm font-bold font-mono shadow-sm text-tertiary focus:ring-tertiary focus:border-tertiary">
                 </div>`;
         }
-
-        const algoTitle = (currentAlgo === 'banker') ? 'Max Matrix' : 'Request Matrix';
-        const titleColor = (currentAlgo === 'banker') ? 'text-tertiary' : 'text-orange-500';
 
         const newCard = document.createElement('div');
         newCard.className = "process-card bg-white border border-slate-200 rounded-xl p-5 shadow-sm relative row-anim hover:border-primary/30 transition-colors";
@@ -236,8 +224,8 @@
                     <div class="flex flex-wrap gap-3 allocation-inputs">${allocInputs}</div>
                 </div>
                 <div class="bg-slate-50/50 p-4 rounded-lg border border-slate-100">
-                    <span class="text-xs font-bold uppercase tracking-wider mb-3 block ${titleColor}">${algoTitle}</span>
-                    <div class="flex flex-wrap gap-3 request-inputs">${reqInputs}</div>
+                    <span class="text-xs font-bold uppercase tracking-wider mb-3 block text-tertiary">Max Matrix</span>
+                    <div class="flex flex-wrap gap-3 max-inputs">${maxInputsHtml}</div>
                 </div>
             </div>
         `;
