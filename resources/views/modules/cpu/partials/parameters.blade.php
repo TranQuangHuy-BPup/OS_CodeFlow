@@ -28,9 +28,10 @@
         {{-- Mode Selector (Chỉ hiện khi chọn Priority) --}}
         <div class="md:col-span-1" x-show="algo === 'priority'" x-cloak>
             <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Mode</label>
-            <select name="mode" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-700 font-medium focus:ring-2 focus:ring-primary/20 outline-none transition-all">
-                <option value="non_preemptive" {{ request('mode') === 'non_preemptive' ? 'selected' : '' }}>Non-Preemptive</option>
-                <option value="preemptive" {{ request('mode') === 'preemptive' ? 'selected' : '' }}>Preemptive</option>
+            {{-- ĐÃ SỬA: Thêm sự kiện onchange để tự động đổi chữ ở bảng Result --}}
+            <select name="mode" onchange="const badge = document.getElementById('result-mode-badge'); if(badge) badge.innerText = this.options[this.selectedIndex].text;" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-700 font-medium focus:ring-2 focus:ring-primary/20 outline-none transition-all">
+                <option value="non_preemptive" {{ (isset($mode) ? $mode : 'non_preemptive') === 'non_preemptive' ? 'selected' : '' }}>Non-Preemptive</option>
+                <option value="preemptive" {{ (isset($mode) ? $mode : 'non_preemptive') === 'preemptive' ? 'selected' : '' }}>Preemptive</option>
             </select>
         </div>
 
