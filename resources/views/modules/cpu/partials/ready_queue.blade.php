@@ -27,7 +27,6 @@
             <tbody class="font-mono text-sm text-slate-700">
 
                 <template x-for="(p, index) in processes" :key="index">
-                    {{-- ĐÂY LÀ CHỖ ĐÃ SỬA: Thêm class row-anim và :style động của Alpine --}}
                     <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors row-anim"
                         :style="'animation-fill-mode: both; animation-delay: ' + (0.2 + index * 0.05) + 's'">
 
@@ -43,7 +42,7 @@
                                 inputmode="numeric"
                                 x-model.number="p.arrival"
                                 @input="p.arrival = Math.max(0, Number($event.target.value || 0))"
-                                @keydown.prevent="['-','e','E','+'].includes($event.key)"
+                                @keydown="if(['-','e','E','+'].includes($event.key)) $event.preventDefault()"
                                 class="w-16 border rounded px-2 py-1 text-right">
                         </td>
 
@@ -55,7 +54,7 @@
                                 inputmode="numeric"
                                 x-model.number="p.burst"
                                 @input="p.burst = Math.max(0, Number($event.target.value || 0))"
-                                @keydown.prevent="['-','e','E','+'].includes($event.key)"
+                                @keydown="if(['-','e','E','+'].includes($event.key)) $event.preventDefault()"
                                 class="w-16 border rounded px-2 py-1 text-right">
                         </td>
 
@@ -67,7 +66,7 @@
                                 inputmode="numeric"
                                 x-model.number="p.priority"
                                 @input="p.priority = Math.max(0, Number($event.target.value || 0))"
-                                @keydown.prevent="['-','e','E','+'].includes($event.key)"
+                                @keydown="if(['-','e','E','+'].includes($event.key)) $event.preventDefault()"
                                 class="w-16 border rounded px-2 py-1 text-right">
                         </td>
 

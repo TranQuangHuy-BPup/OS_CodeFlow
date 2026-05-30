@@ -2,8 +2,8 @@
     <h3 class="font-h3 text-on-primary-container mb-4 flex items-center gap-2">
         <span class="material-symbols-outlined">analytics</span> 
         Result: {{ strtoupper(str_replace('_', ' ', $algorithm)) }} 
-        <span class="text-sm font-medium px-3 py-1 bg-primary/10 text-primary rounded-full ml-2">
-            {{ request('mode') === 'preemptive' ? 'Preemptive' : 'Non-Preemptive' }}
+        <span id="result-mode-badge" class="text-sm font-medium px-3 py-1 bg-primary/10 text-primary rounded-full ml-2">
+            {{ (isset($mode) && $mode === 'preemptive') ? 'Preemptive' : 'Non-Preemptive' }}
         </span>
     </h3>
     <div class="overflow-x-auto">

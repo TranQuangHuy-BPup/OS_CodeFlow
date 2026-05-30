@@ -103,6 +103,22 @@ class PriorityService
         $resultsByPid = [];
         $firstStart = []; // Mảng theo dõi lần chạy đầu tiên để tính Response Time
 
+        // FIX LỖI 500: Xử lý trước các tiến trình có burst = 0 để tránh lặp vô hạn
+        foreach ($processes as $idx => $p) {
+            if ($p['burst'] == 0) {
+                $completed++;
+                $resultsByPid[$p['pid']] = [
+                    'pid' => $p['pid'],
+                    'arrival' => $p['arrival'],
+                    'cpu' => 0,
+                    'completion' => $p['arrival'],
+                    'waiting_time' => 0,
+                    'turnaround' => 0,
+                    'response' => 0,
+                ];
+            }
+        }
+
         while ($completed < $n) {
             $available = [];
             foreach ($processes as $p) {
@@ -119,6 +135,10 @@ class PriorityService
                         $nextArrival = $nextArrival === null ? $p['arrival'] : min($nextArrival, $p['arrival']);
                     }
                 }
+                
+                // Lớp bảo vệ an toàn chống lặp vô hạn
+                if ($nextArrival === null) break;
+
                 $gantt[] = ['pid' => 'IDLE', 'start' => $time, 'end' => $nextArrival];
                 $time = $nextArrival;
                 continue;
@@ -139,7 +159,7 @@ class PriorityService
                 $firstStart[$pid] = $time;
             }
 
-            // Chạy 1 đơn vị thời gian (Hàm mergeGantt sẽ gộp chúng lại sau)
+            // Chạy 1 đơn vị thời gian
             $gantt[] = ['pid' => $pid, 'start' => $time, 'end' => $time + 1];
 
             // Cập nhật trạng thái tiến trình
